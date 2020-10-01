@@ -6,47 +6,70 @@ using UnityEngine.UI;
 
 public class MagicNumbers : MonoBehaviour
 {
-	public int moves;
-	public Text textMoves;
+	public int start_min = 1;
+	public int start_max = 1000;
 
-	public int min = 1;
-	public int max = 1000;
+	public Text textMoves;
 	public Text textMinMax;
 
-	public int guess;
 	public Text textGuess;
 
 	public GameObject PanelStart;
+	public GameObject PanelGame;
 	public GameObject PanelGameStart;
 	public GameObject PanelGameEnd;
 
+	int min;
+	int max;
+	int moves;
+	int guess;
 
-	 public void Start()
+	public void Start()
 	{
-		min = 1;
-		max = 1000;
+		min = start_min;
+		max = start_max;
 		moves = 0;
+		guess = 0;
 		textMinMax.text = $"Загадайте число \nот <color=#e7a9ad>{min}</color> до <color=#e7a9ad>{max}</color>...";
 		UpdateGuess();
+		PanelGameEnd.SetActive(false);
+		PanelGame.SetActive(false);
+		PanelStart.SetActive(true);
 	}
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-			Up();
-		}
+		BtnUpDown();
+		BtnOkStart();
+		BtnOkGameStart();
+		BtnOkGameEnd();
+	}
 
-		if (Input.GetKeyDown(KeyCode.DownArrow))
-		{
-			Down();
-		}
 
-		if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+	public void BtnOkStart ()
+	{
+		if ( PanelStart.activeSelf && (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) )
 		{
-			Ok();
+			//OkStart();
+			print(PanelStart.activeSelf);
+			print(Input.GetKeyDown(KeyCode.KeypadEnter));
 		}
+	}
 
+	public void BtnOkGameStart()
+	{
+		if (PanelGameStart.activeSelf && ( (Input.GetKeyDown(KeyCode.KeypadEnter)) || (Input.GetKeyDown(KeyCode.Return)) ))
+		{
+			OkGame();
+		}
+	}
+
+	public void BtnOkGameEnd()
+    {
+		if (PanelGameEnd.activeSelf && ((Input.GetKeyDown(KeyCode.KeypadEnter)) || (Input.GetKeyDown(KeyCode.Return))))
+		{
+			OkEnd();
+		}
 	}
 
 	public void Up()
@@ -61,12 +84,37 @@ public class MagicNumbers : MonoBehaviour
 		UpdateGuess();
 	}
 
-	public void Ok()
+	public void OkGame()
 	{
 		PanelGameEnd.SetActive(true);
 		PanelGameStart.SetActive(false);
 		textMoves.text = $"Количество ходов: <color=#e7a9ad>{moves}</color>";
 		textGuess.text = $"{guess}";
+	}
+
+	public void OkStart()
+	{
+		PanelStart.SetActive(false);
+		PanelGame.SetActive(true);
+		PanelGameStart.SetActive(true);
+	}
+
+	public void OkEnd()
+	{
+		Start();
+	}
+
+	public void BtnUpDown()
+	{
+		if (PanelGameStart.activeSelf && Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			Up();
+		}
+
+		if (PanelGameStart.activeSelf && Input.GetKeyDown(KeyCode.DownArrow))
+		{
+			Down();
+		}
 	}
 
 	public void UpdateGuess()
